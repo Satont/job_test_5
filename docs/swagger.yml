@@ -1,0 +1,233 @@
+consumes:
+    - application/json
+definitions:
+    TransactionStatus:
+        type: string
+        x-go-package: github.com/satont/test/internal/db/models
+    TransactionType:
+        type: string
+        x-go-package: github.com/satont/test/internal/db/models
+host: localhost:8080
+info:
+    title: API.
+    version: 0.0.1
+paths:
+    /consumer/transactions:
+        get:
+            operationId: getManyTransactions
+            parameters:
+                - description: limit
+                  in: query
+                  maximum: 100
+                  minimum: 1
+                  name: limit
+                  type: integer
+                - description: offset
+                  in: query
+                  maximum: 100
+                  minimum: 1
+                  name: offset
+                  type: integer
+                - description: status
+                  in: query
+                  name: status
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    $ref: '#/responses/transactionsResponse'
+                "400":
+                    $ref: '#/responses/validationError'
+                "500":
+                    $ref: '#/responses/internalError'
+            schemes:
+                - http
+                - https
+            security:
+                - api_key: []
+            summary: Get many transactions
+            tags:
+                - transactions
+    /consumer/transactions/{transactionId}:
+        get:
+            operationId: getSingleTransaction
+            parameters:
+                - description: id of transaction
+                  in: path
+                  name: transactionId
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    $ref: '#/responses/transactionResponse'
+                "404":
+                    $ref: '#/responses/notFoundError'
+                "500":
+                    $ref: '#/responses/internalError'
+            schemes:
+                - http
+                - https
+            security:
+                - api_key: []
+            summary: Get transaction by id
+            tags:
+                - transactions
+    /consumer/transactions/replenish:
+        post:
+            operationId: postReplenish
+            parameters:
+                - in: body
+                  name: Body
+                  schema:
+                    properties:
+                        amount:
+                            type: string
+                            x-go-name: Amount
+                    type: object
+            produces:
+                - application/json
+            responses:
+                "200":
+                    $ref: '#/responses/emptySuccessResponse'
+                "400":
+                    $ref: '#/responses/validationError'
+                "404":
+                    $ref: '#/responses/notFoundError'
+                "500":
+                    $ref: '#/responses/internalError'
+            schemes:
+                - http
+                - https
+            security:
+                - api_key: []
+            summary: Create replenish transaction
+            tags:
+                - transactions
+    /consumer/transactions/withdraw:
+        post:
+            operationId: postWithDraw
+            parameters:
+                - in: body
+                  name: Body
+                  schema:
+                    properties:
+                        amount:
+                            type: string
+                            x-go-name: Amount
+                    type: object
+            produces:
+                - application/json
+            responses:
+                "200":
+                    $ref: '#/responses/emptySuccessResponse'
+                "400":
+                    $ref: '#/responses/validationError'
+                "402":
+                    $ref: '#/responses/paymentRequired'
+                "404":
+                    $ref: '#/responses/notFoundError'
+                "500":
+                    $ref: '#/responses/internalError'
+            schemes:
+                - http
+                - https
+            security:
+                - api_key: []
+            summary: Create withdraw transaction
+            tags:
+                - transactions
+produces:
+    - application/json
+responses:
+    emptySuccessResponse:
+        description: ""
+    internalError:
+        description: |-
+            Internal error
+            Some internal error happend
+    notFoundError:
+        description: Not Found
+    paymentRequired:
+        description: |-
+            Payment required
+            Returns when consumer have no enough balance for withdraw
+    transactionResponse:
+        description: ""
+        schema:
+            properties:
+                amount:
+                    type: string
+                    x-go-name: Amount
+                consumer_id:
+                    type: string
+                    x-go-name: ConsumerID
+                created_at:
+                    format: date-time
+                    type: string
+                    x-go-name: CreatedAt
+                id:
+                    type: string
+                    x-go-name: ID
+                status:
+                    $ref: '#/definitions/TransactionStatus'
+                type:
+                    $ref: '#/definitions/TransactionType'
+                updated_at:
+                    type: string
+                    x-go-name: UpdatedAt
+            type: object
+    transactionsResponse:
+        description: ""
+        schema:
+            items:
+                properties:
+                    amount:
+                        type: string
+                        x-go-name: Amount
+                    consumer_id:
+                        type: string
+                        x-go-name: ConsumerID
+                    created_at:
+                        format: date-time
+                        type: string
+                        x-go-name: CreatedAt
+                    id:
+                        type: string
+                        x-go-name: ID
+                    status:
+                        $ref: '#/definitions/TransactionStatus'
+                    type:
+                        $ref: '#/definitions/TransactionType'
+                    updated_at:
+                        type: string
+                        x-go-name: UpdatedAt
+                type: object
+            type: array
+    validationError:
+        description: A ValidationError is an error that is used when the required input fails validation.
+        schema:
+            properties:
+                messages:
+                    description: The validation message
+                    example: []
+                    items:
+                        type: string
+                    type: array
+                    x-go-name: Messages
+            required:
+                - messages
+            type: object
+schemes:
+    - http
+    - https
+security:
+    - api_key: []
+securityDefinitions:
+    api_key:
+        in: header
+        name: api-key
+        type: apiKey
+swagger: "2.0"
