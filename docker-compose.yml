@@ -46,6 +46,19 @@ services:
     env_file:
       - .env.example
 
+  mark-processed:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: mark-processed
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
+    env_file:
+      - .env.example
+
   migrations:
     image: migrate/migrate
     depends_on:

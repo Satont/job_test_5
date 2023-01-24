@@ -19,6 +19,8 @@ RUN go build -ldflags="-s -w" -o ./transactions ./cmd/transactions/main.go && \
     upx -9 -k ./transactions
 RUN go build -ldflags="-s -w" -o ./seeding ./scripts/seeding/main.go && \
     upx -9 -k ./seeding
+RUN go build -ldflags="-s -w" -o ./mark-processed ./scripts/mark-processed/main.go && \
+    upx -9 -k ./mark-processed
 
 FROM base as api
 COPY --from=base /app/api /bin/api
@@ -31,3 +33,7 @@ CMD ["/bin/transactions"]
 FROM base as seeding
 COPY --from=base /app/seeding /bin/seeding
 CMD ["/bin/seeding"]
+
+FROM base as mark-processed
+COPY --from=base /app/mark-processed /bin/mark-processed
+CMD ["/bin/mark-processed"]

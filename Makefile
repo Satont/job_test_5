@@ -13,10 +13,13 @@ migrate-up: services-up
     -path=/migrations/ -database postgres://localhost:5651/database up
 
 up:
-	docker compose up
+	docker compose up api transactions seeding
 
 down:
 	docker compose down -v
 
 gen-docs:
 	swagger generate spec -o ./docs/swagger.yml -i ./docs/swagger.yml -m
+
+mark-processed:
+	docker compose up mark-processed
