@@ -16,7 +16,7 @@
 
 ### Решение
 
-![Diagram](https://github.com/Satont/job_test_5/.github/assets/db-diagram.png)
+![Diagram](https://github.com/Satont/job_test_5/raw/master/.github/assets/db-digram.png)
 
 - Для миграций выбрал [migrate](https://github.com/golang-migrate/migrate), как минималистичное решение, которое полностью подходит для задачи.
 - В качестве драйвера postgres использовал [sqlx](https://github.com/jmoiron/sqlx), генерация запросов через query builder [squirrel](https://github.com/Masterminds/squirrel). Хорошая связка, до этого использовал ORM, и после работы с данными инструментами думаю, что ORM больше брать не стану. Понятный, выразительный код без оверхеда в SQL запросах.
