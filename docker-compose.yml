@@ -16,7 +16,7 @@ services:
       migrations:
         condition: service_completed_successfully
     env_file:
-      - .env.example
+      - .env.docker
 
   transactions:
     build:
@@ -31,7 +31,7 @@ services:
       migrations:
         condition: service_completed_successfully
     env_file:
-      - .env.example
+      - .env.docker
 
   seeding:
     build:
@@ -44,7 +44,7 @@ services:
       migrations:
         condition: service_completed_successfully
     env_file:
-      - .env.example
+      - .env.docker
 
   mark-processed:
     build:
@@ -57,7 +57,7 @@ services:
       migrations:
         condition: service_completed_successfully
     env_file:
-      - .env.example
+      - .env.docker
 
   migrations:
     image: migrate/migrate
@@ -67,7 +67,7 @@ services:
     volumes:
       - ./db/migrations:/migrations
     env_file:
-      - .env.example
+      - .env.docker
     command: "-path=/migrations/ -database postgres://test:test@postgres:5432/test?sslmode=disable up"
 
   postgres:
